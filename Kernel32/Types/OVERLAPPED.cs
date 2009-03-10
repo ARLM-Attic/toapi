@@ -6,9 +6,14 @@ namespace TOAPI.Kernel32
     [StructLayoutAttribute(LayoutKind.Sequential)]
     public struct OVERLAPPED
     {
-        public uint Internal;
-        public uint InternalHigh;
-        public Anonymous_09c34f72_48f5_4ebf_8c58_0e5ed7358919 Union1;
+        public IntPtr Internal;
+        public IntPtr InternalHigh;
+        /// DWORD->unsigned int
+        public int Offset;
+
+        /// DWORD->unsigned int
+        public int OffsetHigh;
+        //public Anonymous_09c34f72_48f5_4ebf_8c58_0e5ed7358919 Union1;
         public IntPtr hEvent;
     }
 
@@ -26,9 +31,9 @@ namespace TOAPI.Kernel32
     {
 
         /// DWORD->unsigned int
-        public uint Offset;
+        public int Offset;
 
         /// DWORD->unsigned int
-        public uint OffsetHigh;
+        public int OffsetHigh;
     }
 }

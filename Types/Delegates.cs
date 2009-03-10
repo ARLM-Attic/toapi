@@ -18,7 +18,9 @@ namespace TOAPI.Types
     /// This is the delegate for a windows procedure
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int MessageProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+    public delegate IntPtr MessageProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+    //public delegate IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam); 
 
 
     /// <summary>Generic FARPROC return for various Kernel32 calls

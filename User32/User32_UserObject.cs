@@ -7,32 +7,35 @@ namespace TOAPI.User32
     {
         // Desktops and Window Sessions
         // GetUserObjectInformation
-        [DllImport("user32.dll", SetLastError = true)]
+        //[DllImport("user32.dll", SetLastError = true)]
+        //[return: MarshalAsAttribute(UnmanagedType.Bool)]
+        //public static extern bool GetUserObjectInformation(IntPtr hObj, int nIndex, [Out] byte[] pvInfo, int nLength, out uint lpnLengthNeeded);
+
+        [DllImport("user32.dll", SetLastError = true, EntryPoint = "GetUserObjectInformationW")]
         [return: MarshalAsAttribute(UnmanagedType.Bool)]
-        public static extern bool GetUserObjectInformation(IntPtr hObj, int nIndex, [Out] byte[] pvInfo, int nLength, out uint lpnLengthNeeded);
+        public static extern bool GetUserObjectInformation([In] IntPtr hObj, int nIndex, IntPtr pvInfo, int nLength, [Out] out int lpnLengthNeeded);
+        
+        //[DllImport("user32.dll", SetLastError = true)]
+        //[return: MarshalAsAttribute(UnmanagedType.Bool)]
+        //public static extern bool GetUserObjectInformation([In] IntPtr hObj, int nIndex, IntPtr pvInfo, int nLength, IntPtr lpnLengthNeeded);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        [return: MarshalAsAttribute(UnmanagedType.Bool)]
-        public static extern bool GetUserObjectInformation([In] IntPtr hObj, int nIndex, IntPtr pvInfo, int nLength, IntPtr lpnLengthNeeded);
 
-
-        public static int GetUserObjectInformationW([In] IntPtr hObj, int nIndex, object pvInfo, uint nLength, IntPtr lpnLengthNeeded)
+        public static int GetUserObjectInformationW([In] IntPtr hObj, int nIndex, object pvInfo, int nLength, out int LengthNeeded)
         {
-            uint flagsLength;
-            IntPtr lengthNeeded = IntPtr.Zero;
+            int flagsLength;
             int retValue;
 
             // First figure out how much length is needed
-            retValue = GetUserObjectInformationW(hObj, UOI_FLAGS, IntPtr.Zero, 0, lengthNeeded);
+            retValue = GetUserObjectInformationW(hObj, UOI_FLAGS, IntPtr.Zero, 0, out LengthNeeded);
 
             // Set the length to the length needed
-            flagsLength = (uint)lengthNeeded.ToInt32();
+            flagsLength = LengthNeeded;
 
             // Now make the call again with the right size and structure
             GCHandle h0 = GCHandle.Alloc(pvInfo, GCHandleType.Pinned);
             try
             {
-                retValue = GetUserObjectInformationW(hObj, UOI_FLAGS, h0.AddrOfPinnedObject(), flagsLength, lengthNeeded);
+                retValue = GetUserObjectInformationW(hObj, UOI_FLAGS, h0.AddrOfPinnedObject(), flagsLength, out LengthNeeded);
             }
             finally
             {
